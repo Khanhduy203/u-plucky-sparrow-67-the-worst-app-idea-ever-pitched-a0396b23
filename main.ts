@@ -10,6 +10,17 @@ const path = require("node:path");
 const ENTRY =
   "FridgeWatch is an app that livestreams your refrigerator light 24/7 and alerts you the second it turns off, for homeowners who need to know their leftovers are never truly alone in the dark.";
 
+// The bounty gate: the entry must be exactly one sentence and at most
+// 240 characters. Fail loudly here instead of shipping a bad entry file
+// if the sentence is ever edited past the limit — a grader rejection for
+// an over-long entry is silent, so the check belongs in the writer.
+const MAX_ENTRY_CHARS = 240;
+if (ENTRY.length < 1 || ENTRY.length > MAX_ENTRY_CHARS) {
+  throw new Error(
+    `entry is ${ENTRY.length} chars, outside the 1–${MAX_ENTRY_CHARS} gate`,
+  );
+}
+
 const outDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, "entry.txt"), ENTRY, "utf8");
